@@ -1,11 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-
 T = 1
-N = 500
+N = 500 
 dt = T/N                    #每一步步长
 M = 1000                    #有多少条路径
 
@@ -24,17 +21,42 @@ W = np.cumsum(dW,axis=1)
 #累加得到每行路径
 
 t = np.linspace(0,T,N+1)        
-# t = [0,dt,2dt,3dt,...,T] 共有501个元素,此时W中只有500个元素
+# t = [0,dt,2dt,3dt,...,T] 共有501个元素,此时W中每行只有500个元素
+tM = np.tile(t,(M,1))
+#给t的复制M行，变成1000*501的矩阵，和W匹配
 
-# W = np.concatenate([[0], W]) 
-# # 满足W[0] = 0,也满足了size(t)=size(W)
+W = np.insert(W,0,0,axis=1)
+# 满足W[0] = 0,也满足了shape(t)=shape(W)
+# print(np.shape(t),np.shape(W))
 
-# plt.plot(t, W, 'r-',linestyle='--')
-# plt.xlabel('t', fontsize=10)
-# plt.ylabel('W(t)', fontsize=10, rotation=0)
-# plt.show()
+U = np.exp(tM + 0.5*W)
+# 几何布朗运动（GBM）
+Umean = np.mean(U,axis=0)
+# 对每条路径同一时间点求平均值
 
+# 画布朗运动的均值
+plt.figure(figsize=(12,8))
+plt.plot(t, Umean, 
+         'b-',
+         label = 'mean of 1000 paths')
 
+# 画5条布朗运动
+for i in range(4):
+    plt.plot(tM[i,:],U[i,:],
+             'r--',             #r--意思为 color = red ，linestyle = '--'
+             alpha=0.3,
+             )
+plt.plot(tM[5,:],U[5,:],
+    'r--',
+    alpha=0.3,
+    label='5 individual paths'      #为了添加label单独写一条路径
+)
+
+plt.legend(loc='upper left')
+plt.xlabel('t', fontsize=10)
+plt.ylabel('U(t)', fontsize=10, rotation=0)
+plt.xlim(0,1)
+plt.show()
 
 
 
@@ -94,18 +116,4 @@ t = np.linspace(0,T,N+1)
 #   ---
 #   一句话总结：因为 GBM 是乘性随机，取对数后变成线性方程，解完再取指数，所以答案是 exp 形式；而 0.5 就是波动率 σ，作为 W
 #   的系数；指数里的漂移 1 是 (μ−σ²/2) 算出来的结果。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
