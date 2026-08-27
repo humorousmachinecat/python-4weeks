@@ -36,3 +36,18 @@ plt.legend(loc='upper left')
 plt.xlabel('t', fontsize=10)
 plt.ylabel('W(t)', fontsize=10, rotation=0)
 plt.show()
+
+
+# 将Brownian封装进函数
+# def brownian(T,N):
+#     dt = T/N                
+#     np.random.seed(0)
+#     x = np.random.randn(N)
+#     dW = np.zeros(N)        
+#     W = np.zeros(N)
+#     dW = np.array(np.sqrt(dt)*x)    
+#     W = np.cumsum(dW)
+#     t = np.linspace(0,T,N+1)        
+#     W = np.concatenate(([0],W))
+#     plt.figure(figsize=(12,8))
+#     return(W,t)
